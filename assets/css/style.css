@@ -1,0 +1,10 @@
+@charset "UTF-8";
+
+#pennovation {
+    position: fixed;
+    float: top;
+    z-index: -1;
+    width: 100%;
+    align-content: center;
+    opacity: 0.35;
+}
