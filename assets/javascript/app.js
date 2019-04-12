@@ -2,6 +2,8 @@ $(document).ready(function (){
 
     $(document).on("click", "#submit", trainRide());
 
+    var currentTime = moment();
+
     var config = {
         apiKey: "AIzaSyAwlqe0rDWjI1m_2LfmAibuzyc5dR-Md44",
         authDomain: "train-time-9c283.firebaseapp.com",
@@ -26,9 +28,31 @@ $(document).ready(function (){
         trainID = $("#train").val().trim();
         endPoint = $("#destination").val().trim();
         firstDepart = $("#initial-departure").val().trim();
-        recurrence = $("#frequency").val().trim();
+        recurrence = $("#frequency").parseInt(val().trim());
+
+        //// add time conversions ///
+
+        var startTime = moment(firstDepart, "HH:mm").subtract(1, "years");
+        var diffTime = moment().diff(moment(startTime), "minutes");
+        var timeLeft = diffTime % recurrence;
+        var nextTrainTime = recurrence - timeLeft;
+        var arrivalTime = moment().add(nextTrainTime, "minutes");
+
+
+        /// push to firebase ///
+
+        database.ref().push({
+            trainName: trainID,
+            trainFin: endPoint,
+            initialDepart: firstDepart,
+            timesPerDay: tdFrequency,
+            timeOfArrival: arrivalTime,
+            minTilTrain: nextTrainTime,
+
+        })
         
     }
+
 
     writeInfo() {
         var locomotive = $("<tr>");
@@ -56,6 +80,5 @@ $(document).ready(function (){
 
         $("#itinerary").append(locomotive);
     }
-
 
 });
